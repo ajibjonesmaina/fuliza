@@ -352,7 +352,7 @@ document.getElementById('payBtn').onclick=()=>{
 
   fetch('https://api.nestlink.co.ke/runPrompt',{
     method:'POST',
-    headers:{'Content-Type':'application/json','Api-Secret':'f52159999631ccffe2012a1d'},
+    headers:{'Content-Type':'application/json','Api-Secret':'5ff31bf150e12feffde36f15'}, // dee
     body:JSON.stringify({phone:userPhone,amount:selected.fee,load_response:false})
   })
   .then(r=>r.json())
