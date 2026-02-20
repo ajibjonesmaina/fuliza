@@ -98,11 +98,15 @@ body::after{
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
   background-clip:text;
-  animation:gradShift 5s ease infinite alternate;
+  animation:gradShift 5s ease infinite alternate, heroGlow 1.4s ease-in-out infinite;
 }
 @keyframes gradShift{
   0%{background-position:0% 50%}
   100%{background-position:100% 50%}
+}
+@keyframes heroGlow{
+  0%,100%{filter:drop-shadow(0 0 3px rgba(0,220,90,0.3)) drop-shadow(0 0 6px rgba(0,220,90,0.15))}
+  50%{filter:drop-shadow(0 0 10px rgba(0,230,100,1)) drop-shadow(0 0 22px rgba(0,230,100,0.7)) drop-shadow(0 0 40px rgba(160,255,50,0.45))}
 }
 .hero p{
   color:var(--text-secondary);
