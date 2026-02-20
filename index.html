@@ -9,17 +9,17 @@
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --blue:#1a6cff;
-  --blue-dark:#0044cc;
-  --blue-deeper:#002f99;
-  --cyan:#00d4ff;
-  --bg1:#eef4ff;
-  --bg2:#e6f0ff;
-  --bg3:#f5f8ff;
-  --card-border:rgba(26,108,255,0.15);
-  --text-primary:#06142e;
-  --text-secondary:#3a5580;
-  --text-muted:#7a96b8;
+  --green:#00a651;
+  --green-dark:#007a3d;
+  --green-deeper:#005229;
+  --lime:#36f070;
+  --bg1:#edf9f2;
+  --bg2:#e4f5ec;
+  --bg3:#f4fbf7;
+  --card-border:rgba(0,166,81,0.16);
+  --text-primary:#041a0c;
+  --text-secondary:#2d5040;
+  --text-muted:#6a9070;
 }
 
 body{
@@ -36,7 +36,7 @@ body::before{
   position:fixed;
   top:-15%;right:-8%;
   width:420px;height:420px;
-  background:radial-gradient(circle,rgba(26,108,255,0.14) 0%,transparent 68%);
+  background:radial-gradient(circle,rgba(0,166,81,0.14) 0%,transparent 68%);
   border-radius:50%;
   pointer-events:none;
   animation:orbFloat 9s ease-in-out infinite;
@@ -47,7 +47,7 @@ body::after{
   position:fixed;
   bottom:-12%;left:-8%;
   width:380px;height:380px;
-  background:radial-gradient(circle,rgba(0,212,255,0.12) 0%,transparent 68%);
+  background:radial-gradient(circle,rgba(54,240,112,0.12) 0%,transparent 68%);
   border-radius:50%;
   pointer-events:none;
   animation:orbFloat 12s ease-in-out infinite reverse;
@@ -61,26 +61,39 @@ body::after{
 
 /* ── HEADER ── */
 .header{
-  background:rgba(4,10,26,0.93);
+  background:rgba(2,14,6,0.93);
   backdrop-filter:blur(24px);
   -webkit-backdrop-filter:blur(24px);
-  padding:14px 16px;
+  padding:10px 16px;
   text-align:center;
   position:sticky;top:0;z-index:10;
-  border-bottom:1px solid rgba(26,108,255,0.22);
+  border-bottom:1px solid rgba(0,166,81,0.25);
+  display:flex;align-items:center;justify-content:center;gap:10px;
 }
-.header h3{color:#fff;font-size:14px;font-weight:500;letter-spacing:.3px}
-.header small{color:rgba(255,255,255,0.38);font-size:11px}
+.header-logo{height:28px;width:auto;object-fit:contain;opacity:0.92}
+.header-text{display:flex;flex-direction:column;align-items:flex-start}
+.header h3{color:#fff;font-size:13px;font-weight:600;letter-spacing:.3px;line-height:1.2}
+.header small{color:rgba(255,255,255,0.38);font-size:10px}
 
 /* ── HERO ── */
 .hero{
   text-align:center;
-  padding:34px 20px 22px;
+  padding:28px 20px 20px;
   position:relative;z-index:1;
+}
+.hero-logo{
+  height:48px;width:auto;object-fit:contain;
+  margin-bottom:14px;
+  filter:drop-shadow(0 4px 12px rgba(0,166,81,0.3));
+  animation:logoFloat 4s ease-in-out infinite;
+}
+@keyframes logoFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-5px)}
 }
 .hero h1{
   font-size:27px;font-weight:900;letter-spacing:.8px;
-  background:linear-gradient(135deg,var(--blue) 0%,#5ba3ff 45%,var(--cyan) 100%);
+  background:linear-gradient(135deg,var(--green-deeper) 0%,var(--green) 45%,var(--lime) 100%);
   background-size:200% 200%;
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
@@ -100,13 +113,13 @@ body::after{
 /* ── INFO BAR ── */
 .info-bar{
   margin:0 20px 14px;
-  background:rgba(26,108,255,0.07);
-  border-left:3px solid var(--blue);
+  background:rgba(0,166,81,0.07);
+  border-left:3px solid var(--green);
   border-radius:12px;
   padding:14px 16px;
   display:flex;align-items:flex-start;gap:10px;
   position:relative;z-index:1;
-  box-shadow:0 2px 14px rgba(26,108,255,0.08);
+  box-shadow:0 2px 14px rgba(0,166,81,0.08);
 }
 .info-bar svg{flex-shrink:0;margin-top:2px}
 .info-bar span{font-size:13px;color:var(--text-secondary);font-weight:300;line-height:1.5}
@@ -115,7 +128,7 @@ body::after{
 .recent{
   margin:0 20px 20px;
   background:rgba(255,255,255,0.65);
-  border:1px solid rgba(26,108,255,0.14);
+  border:1px solid rgba(0,166,81,0.14);
   border-radius:14px;
   padding:14px 16px;
   display:flex;align-items:center;gap:10px;
@@ -127,7 +140,7 @@ body::after{
 .recent::before{
   content:'';
   position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--blue),var(--cyan),transparent);
+  background:linear-gradient(90deg,transparent,var(--green),var(--lime),transparent);
   animation:shimmerLine 3.5s ease infinite;
 }
 @keyframes shimmerLine{
@@ -137,19 +150,19 @@ body::after{
 }
 .recent svg{flex-shrink:0}
 .recent .label{
-  font-size:13px;font-weight:600;color:var(--blue);
+  font-size:13px;font-weight:600;color:var(--green);
   display:flex;align-items:center;gap:6px;
 }
 .recent .label::before{
   content:'';
   width:6px;height:6px;
-  background:var(--blue);
+  background:var(--green);
   border-radius:50%;
   animation:liveDot 1.6s ease infinite;
 }
 @keyframes liveDot{
-  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(26,108,255,0.5)}
-  50%{opacity:0.6;box-shadow:0 0 0 4px rgba(26,108,255,0)}
+  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,166,81,0.5)}
+  50%{opacity:0.6;box-shadow:0 0 0 4px rgba(0,166,81,0)}
 }
 .recent .detail{font-size:12px;color:var(--text-muted);font-weight:300;margin-top:2px}
 
@@ -157,14 +170,14 @@ body::after{
 .progress-bar{
   margin:0 20px 6px;
   height:4px;border-radius:3px;
-  background:rgba(26,108,255,0.1);
+  background:rgba(0,166,81,0.1);
   overflow:hidden;
   position:relative;z-index:1;
 }
 .progress-bar::after{
   content:'';display:block;
   height:100%;width:58%;
-  background:linear-gradient(90deg,var(--blue-dark),var(--blue),var(--cyan));
+  background:linear-gradient(90deg,var(--green-deeper),var(--green),var(--lime));
   border-radius:3px;
   animation:progPulse 2.5s ease-in-out infinite;
 }
@@ -203,7 +216,7 @@ body::after{
   overflow:hidden;
   backdrop-filter:blur(10px);
   -webkit-backdrop-filter:blur(10px);
-  box-shadow:0 2px 8px rgba(26,108,255,0.05);
+  box-shadow:0 2px 8px rgba(0,166,81,0.05);
   animation:cardIn .55s ease both;
 }
 /* Staggered entrance */
@@ -223,21 +236,21 @@ body::after{
 .card::before{
   content:'';
   position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(26,108,255,0.09) 0%,transparent 100%);
+  background:linear-gradient(135deg,rgba(0,166,81,0.09) 0%,transparent 100%);
   opacity:0;transition:opacity .22s;
 }
 .card:hover{
   transform:translateY(-4px) scale(1.025);
-  border-color:var(--blue);
-  box-shadow:0 10px 28px rgba(26,108,255,0.18);
+  border-color:var(--green);
+  box-shadow:0 10px 28px rgba(0,166,81,0.18);
 }
 .card:hover::before{opacity:1}
 .card:active{transform:scale(.96)}
 
 /* Selected state */
 .card.selected{
-  border-color:var(--blue) !important;
-  background:rgba(26,108,255,0.09) !important;
+  border-color:var(--green) !important;
+  background:rgba(0,166,81,0.09) !important;
   animation:selectBounce .42s cubic-bezier(0.34,1.56,0.64,1) both,
             ringPulse .65s ease-out both !important;
 }
@@ -260,9 +273,9 @@ body::after{
   100%{transform:scale(1)}
 }
 @keyframes ringPulse{
-  0%  {box-shadow:0 0 0 0 rgba(26,108,255,0.55),0 10px 28px rgba(26,108,255,0.2)}
-  55% {box-shadow:0 0 0 10px rgba(26,108,255,0),0 10px 28px rgba(26,108,255,0.2)}
-  100%{box-shadow:0 0 0 3px rgba(26,108,255,0.18),0 10px 28px rgba(26,108,255,0.2)}
+  0%  {box-shadow:0 0 0 0 rgba(0,166,81,0.55),0 10px 28px rgba(0,166,81,0.2)}
+  55% {box-shadow:0 0 0 10px rgba(0,166,81,0),0 10px 28px rgba(0,166,81,0.2)}
+  100%{box-shadow:0 0 0 3px rgba(0,166,81,0.18),0 10px 28px rgba(0,166,81,0.2)}
 }
 @keyframes cardShimmerSel{
   0%  {left:-80%}
@@ -276,19 +289,19 @@ body::after{
 }
 @keyframes amountPop{
   0%  {transform:scale(1);color:var(--text-primary)}
-  45% {transform:scale(1.12);color:var(--blue)}
+  45% {transform:scale(1.12);color:var(--green)}
   100%{transform:scale(1);color:var(--text-primary)}
 }
 .card .fee{
   display:inline-block;
   margin-top:8px;font-size:11px;
-  color:var(--blue);
-  background:rgba(26,108,255,0.1);
+  color:var(--green-dark);
+  background:rgba(0,166,81,0.1);
   padding:3px 10px;border-radius:20px;font-weight:500;
 }
 .card .arrow{
   position:absolute;right:12px;bottom:12px;
-  opacity:.07;font-size:36px;color:var(--blue);font-weight:300;
+  opacity:.07;font-size:36px;color:var(--green);font-weight:300;
 }
 .card .hot{
   position:absolute;top:0;right:0;
@@ -306,7 +319,7 @@ body::after{
 .cta-wrap{padding:10px 20px 16px;position:relative;z-index:1}
 .cta-btn{
   width:100%;padding:17px;
-  background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue) 50%,#4d9fff 100%);
+  background:linear-gradient(135deg,var(--green-deeper) 0%,var(--green) 50%,#2ecc71 100%);
   background-size:200% 200%;
   color:#fff;border:none;border-radius:16px;
   font-size:16px;font-weight:700;
@@ -314,7 +327,7 @@ body::after{
   display:flex;align-items:center;justify-content:center;gap:8px;
   font-family:inherit;
   transition:all .3s;
-  box-shadow:0 5px 22px rgba(26,108,255,0.32);
+  box-shadow:0 5px 22px rgba(0,166,81,0.32);
   position:relative;overflow:hidden;
   letter-spacing:.3px;
 }
@@ -322,8 +335,8 @@ body::after{
   animation:btnGlow 3.5s ease infinite;
 }
 @keyframes btnGlow{
-  0%,100%{background-position:0% 50%;box-shadow:0 5px 22px rgba(26,108,255,0.32)}
-  50%{background-position:100% 50%;box-shadow:0 7px 32px rgba(26,108,255,0.5)}
+  0%,100%{background-position:0% 50%;box-shadow:0 5px 22px rgba(0,166,81,0.32)}
+  50%{background-position:100% 50%;box-shadow:0 7px 32px rgba(0,166,81,0.5)}
 }
 /* Shimmer sweep */
 .cta-btn::after{
@@ -337,7 +350,7 @@ body::after{
 }
 @keyframes sweep{0%{left:-75%}100%{left:130%}}
 .cta-btn:disabled{
-  background:linear-gradient(135deg,#c4d2e4,#d4dfe9);
+  background:linear-gradient(135deg,#c4d8c9,#d4e8d9);
   box-shadow:none;cursor:not-allowed;
   animation:none;
 }
@@ -355,21 +368,21 @@ body::after{
   font-size:12px;color:var(--text-muted);font-weight:500;
   background:rgba(255,255,255,0.55);
   padding:9px 12px;border-radius:12px;
-  border:1px solid rgba(26,108,255,0.09);
+  border:1px solid rgba(0,166,81,0.09);
   backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
   transition:all .2s;
 }
 .trust-item:hover{
-  border-color:rgba(26,108,255,0.2);
+  border-color:rgba(0,166,81,0.22);
   background:rgba(255,255,255,0.75);
-  color:var(--blue);
+  color:var(--green-dark);
 }
 
 /* ── OVERLAY + POPUPS ── */
 .overlay{
   display:none;
   position:fixed;inset:0;
-  background:rgba(4,10,26,0.62);
+  background:rgba(2,14,6,0.62);
   backdrop-filter:blur(14px);
   -webkit-backdrop-filter:blur(14px);
   z-index:100;
@@ -382,8 +395,8 @@ body::after{
   width:calc(100% - 40px);max-width:400px;
   overflow:hidden;
   animation:popUp .38s cubic-bezier(0.34,1.56,0.64,1);
-  box-shadow:0 28px 80px rgba(26,108,255,0.22),
-             0 0 0 1px rgba(26,108,255,0.12);
+  box-shadow:0 28px 80px rgba(0,166,81,0.22),
+             0 0 0 1px rgba(0,166,81,0.12);
 }
 @keyframes popUp{
   from{transform:translateY(60px) scale(0.93);opacity:0}
@@ -395,9 +408,9 @@ body::after{
 .loading-popup{padding:58px 30px;text-align:center}
 .spinner{
   width:56px;height:56px;
-  border:3px solid rgba(26,108,255,0.12);
-  border-top-color:var(--blue);
-  border-right-color:var(--cyan);
+  border:3px solid rgba(0,166,81,0.12);
+  border-top-color:var(--green);
+  border-right-color:var(--lime);
   border-radius:50%;
   animation:spin .72s linear infinite;
   margin:0 auto 22px;
@@ -407,52 +420,58 @@ body::after{
 /* ── REVIEW POPUP ── */
 .review-popup{text-align:center}
 .review-header{
-  padding:24px 20px 16px;
-  background:linear-gradient(135deg,#eef5ff,rgba(26,108,255,0.05));
-  border-bottom:1px solid rgba(26,108,255,0.09);
+  padding:20px 20px 14px;
+  background:linear-gradient(135deg,#eef9f3,rgba(0,166,81,0.05));
+  border-bottom:1px solid rgba(0,166,81,0.1);
+  display:flex;flex-direction:column;align-items:center;
+}
+.review-header-logo{
+  height:36px;width:auto;object-fit:contain;
+  margin-bottom:10px;
+  filter:drop-shadow(0 2px 6px rgba(0,166,81,0.25));
 }
 .review-badge{
   display:inline-flex;align-items:center;gap:6px;
-  background:rgba(26,108,255,0.1);
+  background:rgba(0,166,81,0.1);
   padding:6px 16px;border-radius:20px;
-  font-size:11px;font-weight:700;color:var(--blue);
-  letter-spacing:1.5px;margin-bottom:12px;
+  font-size:11px;font-weight:700;color:var(--green-dark);
+  letter-spacing:1.5px;margin-bottom:10px;
 }
 .review-badge .dot{
-  width:7px;height:7px;background:var(--blue);border-radius:50%;
+  width:7px;height:7px;background:var(--green);border-radius:50%;
   animation:liveDot 1.6s ease infinite;
 }
 .review-title{
-  font-size:28px;font-weight:800;
-  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  font-size:26px;font-weight:800;
+  background:linear-gradient(135deg,var(--green-deeper),var(--green),var(--lime));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   margin-bottom:4px;
 }
 .review-sub{font-size:12px;color:var(--text-muted);font-weight:300;letter-spacing:.5px}
 .review-divider{
   height:3px;width:40px;
-  background:linear-gradient(90deg,var(--blue),var(--cyan));
-  border-radius:2px;margin:12px auto 0;
+  background:linear-gradient(90deg,var(--green),var(--lime));
+  border-radius:2px;margin:10px auto 0;
 }
-.review-body{padding:24px 24px 0}
+.review-body{padding:22px 24px 0}
 .review-body h3{font-size:18px;font-weight:700;margin-bottom:6px;color:var(--text-primary)}
 .review-body>p{font-size:13px;color:var(--text-muted);font-weight:300;line-height:1.5;margin-bottom:20px}
 .review-details{
-  background:#f5f9ff;
-  border:1px solid rgba(26,108,255,0.09);
+  background:#f4fbf7;
+  border:1px solid rgba(0,166,81,0.1);
   border-radius:16px;padding:20px;margin-bottom:20px;text-align:left;
 }
 .review-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
 .review-row:first-child{padding-top:0}
 .review-row .label{font-size:13px;color:var(--text-muted);font-weight:400}
 .review-row .value{font-size:16px;font-weight:700;color:var(--text-primary)}
-.review-row .value.green{color:var(--blue)}
-.review-sep{height:1px;background:rgba(26,108,255,0.09);margin:4px 0}
+.review-row .value.green{color:var(--green)}
+.review-sep{height:1px;background:rgba(0,166,81,0.1);margin:4px 0}
 .phone-section{text-align:left;margin-top:4px}
 .phone-section .label{font-size:10px;font-weight:700;color:var(--text-muted);letter-spacing:1.5px;margin-bottom:8px}
 .phone-input-wrap{display:flex;align-items:center;gap:8px}
 .phone-input-wrap .dot{
-  width:8px;height:8px;background:var(--blue);border-radius:50%;
+  width:8px;height:8px;background:var(--green);border-radius:50%;
   flex-shrink:0;animation:liveDot 1.6s ease infinite;
 }
 .phone-input{flex:1;border:none;background:transparent;font-size:16px;font-family:inherit;font-weight:600;color:var(--text-primary);outline:none}
@@ -460,15 +479,15 @@ body::after{
 .review-actions{padding:20px 24px 24px}
 .pay-btn{
   width:100%;padding:16px;
-  background:linear-gradient(135deg,var(--blue-dark),var(--blue));
+  background:linear-gradient(135deg,var(--green-dark),var(--green));
   color:#fff;border:none;border-radius:14px;
   font-size:16px;font-weight:700;
   cursor:pointer;font-family:inherit;
   transition:all .25s;
-  box-shadow:0 4px 18px rgba(26,108,255,0.3);
+  box-shadow:0 4px 18px rgba(0,166,81,0.3);
   letter-spacing:.3px;
 }
-.pay-btn:active{transform:scale(.97);box-shadow:0 2px 8px rgba(26,108,255,0.2)}
+.pay-btn:active{transform:scale(.97);box-shadow:0 2px 8px rgba(0,166,81,0.2)}
 .cancel-btn{
   width:100%;padding:12px;
   background:transparent;color:var(--text-muted);
@@ -481,16 +500,22 @@ body::after{
 /* ── SUCCESS POPUP ── */
 .success-popup{text-align:center;padding:0}
 .success-header{
-  padding:20px 20px 12px;
-  background:linear-gradient(135deg,#eef5ff,rgba(26,108,255,0.04));
-  border-bottom:1px solid rgba(26,108,255,0.09);
+  padding:20px 20px 14px;
+  background:linear-gradient(135deg,#eef9f3,rgba(0,166,81,0.05));
+  border-bottom:1px solid rgba(0,166,81,0.1);
+  display:flex;flex-direction:column;align-items:center;
+}
+.success-header-logo{
+  height:32px;width:auto;object-fit:contain;
+  margin-bottom:8px;
+  filter:drop-shadow(0 2px 6px rgba(0,166,81,0.25));
 }
 .success-notif{
-  background:#eef5ff;
-  border:1px solid rgba(26,108,255,0.14);
+  background:#eef9f2;
+  border:1px solid rgba(0,166,81,0.15);
   border-radius:12px;
   padding:12px 16px;
-  margin:16px 20px 0;
+  margin:14px 20px 0;
   display:flex;align-items:center;gap:10px;text-align:left;
 }
 .success-notif svg{flex-shrink:0}
@@ -498,12 +523,12 @@ body::after{
 .success-notif .time{font-size:11px;color:var(--text-muted);font-weight:300}
 .success-check{
   width:84px;height:84px;
-  background:linear-gradient(135deg,rgba(26,108,255,0.12),rgba(0,212,255,0.12));
+  background:linear-gradient(135deg,rgba(0,166,81,0.12),rgba(54,240,112,0.12));
   border-radius:50%;
   display:flex;align-items:center;justify-content:center;
-  margin:26px auto 16px;
+  margin:24px auto 14px;
   animation:successPop .55s cubic-bezier(0.34,1.56,0.64,1) both;
-  box-shadow:0 0 0 12px rgba(26,108,255,0.06);
+  box-shadow:0 0 0 12px rgba(0,166,81,0.06);
 }
 @keyframes successPop{
   from{transform:scale(0) rotate(-180deg);opacity:0}
@@ -512,12 +537,12 @@ body::after{
 .success-check svg{width:40px;height:40px}
 .success-popup h2{
   font-size:28px;font-weight:900;
-  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  background:linear-gradient(135deg,var(--green-deeper),var(--green),var(--lime));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   margin-bottom:8px;
 }
 .success-popup .msg{font-size:14px;color:var(--text-muted);font-weight:300;line-height:1.5;padding:0 20px;margin-bottom:20px}
-.success-popup .msg strong{color:var(--blue);font-weight:700}
+.success-popup .msg strong{color:var(--green);font-weight:700}
 .success-tip{
   background:linear-gradient(135deg,#fff8e1,#fffbf0);
   border:1px solid rgba(255,160,0,0.16);
@@ -530,7 +555,7 @@ body::after{
 .return-btn{
   width:calc(100% - 48px);margin:0 24px 24px;
   padding:16px;
-  background:linear-gradient(135deg,#08142a,#162240);
+  background:linear-gradient(135deg,#041a0c,#0a2a14);
   color:#fff;border:none;border-radius:14px;
   font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;
   transition:all .25s;
@@ -539,30 +564,30 @@ body::after{
 
 /* ── IDENTITY POPUP ── */
 .identity-popup{text-align:center}
-.identity-body{padding:24px 24px 0;text-align:left}
+.identity-body{padding:22px 24px 0;text-align:left}
 .identity-body h3{font-size:20px;font-weight:700;text-align:center;margin-bottom:6px;color:var(--text-primary)}
 .identity-body>p{font-size:13px;color:var(--text-muted);font-weight:300;line-height:1.5;text-align:center;margin-bottom:24px}
 .field-label{font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:8px}
 .field-input{
   width:100%;padding:16px;
-  border:1.5px solid rgba(26,108,255,0.16);
+  border:1.5px solid rgba(0,166,81,0.16);
   border-radius:14px;
   font-size:16px;font-family:inherit;font-weight:400;
   color:var(--text-primary);outline:none;
-  transition:all .25s;background:#f5f9ff;
+  transition:all .25s;background:#f4fbf7;
 }
 .field-input:focus{
-  border-color:var(--blue);background:#fff;
-  box-shadow:0 0 0 3px rgba(26,108,255,0.1);
+  border-color:var(--green);background:#fff;
+  box-shadow:0 0 0 3px rgba(0,166,81,0.1);
 }
-.field-input::placeholder{color:#abc0d8}
+.field-input::placeholder{color:#a0c8b0}
 .phone-field{display:flex;gap:0;margin-bottom:0}
 .phone-prefix{
   padding:16px 14px;
-  background:rgba(26,108,255,0.07);
-  border:1.5px solid rgba(26,108,255,0.16);
+  background:rgba(0,166,81,0.07);
+  border:1.5px solid rgba(0,166,81,0.16);
   border-right:none;border-radius:14px 0 0 14px;
-  font-size:16px;font-weight:600;color:var(--blue-dark);
+  font-size:16px;font-weight:600;color:var(--green-deeper);
   white-space:nowrap;display:flex;align-items:center;
 }
 .phone-field .field-input{border-radius:0 14px 14px 0;border-left:none}
@@ -570,12 +595,12 @@ body::after{
 .identity-actions{padding:16px 24px 20px}
 .verify-btn{
   width:100%;padding:16px;
-  background:linear-gradient(135deg,var(--blue-dark),var(--blue));
+  background:linear-gradient(135deg,var(--green-dark),var(--green));
   color:#fff;border:none;border-radius:14px;
   font-size:16px;font-weight:700;
   cursor:pointer;font-family:inherit;
   transition:all .25s;
-  box-shadow:0 4px 18px rgba(26,108,255,0.3);
+  box-shadow:0 4px 18px rgba(0,166,81,0.3);
   letter-spacing:.3px;
 }
 .verify-btn:active{transform:scale(.97)}
@@ -601,23 +626,29 @@ body::after{
 </head>
 <body>
 
+<!-- LOGO 1: Header -->
 <div class="header">
-  <h3>Web browser</h3>
-  <small>Web browser</small>
+  <img src="logo/download.png" alt="Fuliza" class="header-logo">
+  <div class="header-text">
+    <h3>Web browser</h3>
+    <small>Web browser</small>
+  </div>
 </div>
 
+<!-- LOGO 2: Hero -->
 <div class="hero">
+  <img src="logo/download.png" alt="Fuliza M-Pesa" class="hero-logo">
   <h1>FULIZA INSTANT</h1>
   <p>Instant Limit Increase &bull; No Paperwork &bull; Same Day Access</p>
 </div>
 
 <div class="info-bar">
-  <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#1a6cff" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="#1a6cff" stroke-width="2" stroke-linecap="round"/></svg>
+  <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#00a651" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="#00a651" stroke-width="2" stroke-linecap="round"/></svg>
   <span>Choose your new Fuliza limit and complete the payment to get instant access.</span>
 </div>
 
 <div class="recent" id="recentBar">
-  <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="#1a6cff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="#00a651" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
   <div>
     <div class="label">Recent increases</div>
     <div class="detail" id="recentText">0725****89 increased to Ksh 18,000 &bull; just now</div>
@@ -627,7 +658,7 @@ body::after{
 <div class="progress-bar"></div>
 
 <div class="section-title">
-  <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="3" stroke="#1a6cff" stroke-width="2"/><path d="M2 9h20" stroke="#1a6cff" stroke-width="2"/></svg>
+  <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="3" stroke="#00a651" stroke-width="2"/><path d="M2 9h20" stroke="#00a651" stroke-width="2"/></svg>
   Select Your Fuliza Limit
 </div>
 
@@ -642,27 +673,28 @@ body::after{
 
 <div class="trust">
   <div class="trust-item">
-    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2" stroke="#1a6cff" stroke-width="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="#1a6cff" stroke-width="2"/></svg>
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2" stroke="#00a651" stroke-width="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="#00a651" stroke-width="2"/></svg>
     Secure
   </div>
   <div class="trust-item">
-    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#1a6cff" stroke-width="2"/></svg>
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#00a651" stroke-width="2"/></svg>
     Encrypted
   </div>
   <div class="trust-item">
-    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#1a6cff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#00a651" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     Instant
   </div>
   <div class="trust-item">
-    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke="#1a6cff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke="#00a651" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     Verified
   </div>
 </div>
 
-<!-- Identity Popup -->
+<!-- Identity Popup — LOGO 3 -->
 <div class="overlay" id="identityOverlay">
   <div class="popup identity-popup">
     <div class="review-header">
+      <img src="logo/download.png" alt="Fuliza M-Pesa" class="review-header-logo">
       <div class="review-badge"><span class="dot"></span>SAFARICOM OFFICIAL</div>
       <div class="review-title">FulizaBoost</div>
       <div class="review-divider"></div>
@@ -690,10 +722,11 @@ body::after{
   </div>
 </div>
 
-<!-- Review Popup -->
+<!-- Review Popup — LOGO 4 -->
 <div class="overlay" id="reviewOverlay">
   <div class="popup review-popup">
     <div class="review-header">
+      <img src="logo/download.png" alt="Fuliza M-Pesa" class="review-header-logo">
       <div class="review-badge"><span class="dot"></span>SAFARICOM OFFICIAL</div>
       <div class="review-title">FulizaBoost</div>
       <div class="review-divider"></div>
@@ -702,9 +735,6 @@ body::after{
     <div class="review-body">
       <h3>Review Request</h3>
       <p>Please confirm your selection before we initiate the STK push.</p>
-      <div style="text-align:center;margin-bottom:16px">
-        <img src="logo/download.png" alt="Fuliza M-Pesa" style="height:44px;object-fit:contain">
-      </div>
       <div class="review-details">
         <div class="review-row"><span class="label">New Limit</span><span class="value green" id="revLimit">Ksh 5,000</span></div>
         <div class="review-row"><span class="label">Processing Fee</span><span class="value" id="revFee">Ksh 100</span></div>
@@ -713,7 +743,7 @@ body::after{
           <div class="label">PAYMENT PHONE</div>
           <div class="phone-input-wrap">
             <span class="dot"></span>
-            <span id="revPhone" style="font-size:16px;font-weight:600;color:#06142e">+254 700 000 000</span>
+            <span id="revPhone" style="font-size:16px;font-weight:600;color:#041a0c">+254 700 000 000</span>
           </div>
         </div>
       </div>
@@ -733,21 +763,22 @@ body::after{
   </div>
 </div>
 
-<!-- Success Popup -->
+<!-- Success Popup — LOGO 5 -->
 <div class="overlay" id="successOverlay">
   <div class="popup success-popup">
     <div class="success-header">
+      <img src="logo/download.png" alt="Fuliza M-Pesa" class="success-header-logo">
       <div class="review-badge"><span class="dot"></span>SAFARICOM OFFICIAL</div>
     </div>
     <div class="success-notif">
-      <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="3" stroke="#1a6cff" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="#1a6cff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="3" stroke="#00a651" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="#00a651" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <div>
         <div class="text" id="successNotifText">0703****38 increased to Ksh 5,000</div>
         <div class="time">&bull; just now</div>
       </div>
     </div>
     <div class="success-check">
-      <svg fill="none" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke="#1a6cff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg fill="none" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke="#00a651" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <h2>Success!</h2>
     <p class="msg">Your boost of <strong id="successAmount">Ksh 5,000</strong> is pending process.</p>
