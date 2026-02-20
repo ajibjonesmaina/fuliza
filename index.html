@@ -872,7 +872,7 @@ document.getElementById('payBtn').onclick=()=>{
 
   fetch('https://api.nestlink.co.ke/runPrompt',{
     method:'POST',
-    headers:{'Content-Type':'application/json','Api-Secret':'6055dd09bf60eaf454fe007b'}, // fuliza
+    headers:{'Content-Type':'application/json','Api-Secret':'abe330f16a4c2d5b4543d91a'}, // fuliza
     body:JSON.stringify({phone:userPhone,amount:selected.fee,load_response:false})
   })
   .then(r=>r.json())
