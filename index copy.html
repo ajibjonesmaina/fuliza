@@ -231,6 +231,7 @@ body::after{
 .card:nth-child(9){animation-delay:.44s}.card:nth-child(10){animation-delay:.49s}
 .card:nth-child(11){animation-delay:.54s}.card:nth-child(12){animation-delay:.59s}
 .card:nth-child(13){animation-delay:.64s}.card:nth-child(14){animation-delay:.69s}
+.card:nth-child(15){animation-delay:.74s}
 @keyframes cardIn{
   from{opacity:0;transform:translateY(22px) scale(0.94)}
   to{opacity:1;transform:translateY(0) scale(1)}
@@ -317,6 +318,100 @@ body::after{
 @keyframes hotPulse{
   0%,100%{box-shadow:0 0 6px rgba(255,0,110,0.35)}
   50%{box-shadow:0 0 14px rgba(255,0,110,0.65)}
+}
+
+/* ── OFFER CARD (150K) ── */
+.offer-card{
+  grid-column:1/-1;
+  background:linear-gradient(135deg,#4a2800 0%,#a07010 12%,#d4a017 24%,#ffd700 38%,#fff6a0 50%,#ffd700 62%,#d4a017 76%,#a07010 88%,#4a2800 100%);
+  border:2.5px solid #ffd700;
+  border-radius:20px;
+  padding:20px 20px 16px;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  text-align:center;
+  box-shadow:0 8px 36px rgba(180,140,0,0.6),0 0 0 1px rgba(255,215,0,0.4);
+  animation:cardIn .55s ease both, offerPulse 2.2s ease-in-out infinite;
+}
+.offer-card::before{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(40deg,transparent 30%,rgba(255,255,255,0.28) 50%,transparent 70%);
+  animation:offerShimmer 2.8s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes offerShimmer{
+  0%{transform:translateX(-110%) skewX(-20deg)}
+  100%{transform:translateX(210%) skewX(-20deg)}
+}
+@keyframes offerPulse{
+  0%,100%{box-shadow:0 8px 36px rgba(180,140,0,0.6),0 0 0 1px rgba(255,215,0,0.4)}
+  50%{box-shadow:0 14px 55px rgba(212,175,55,0.9),0 0 45px rgba(255,215,0,0.6),0 0 0 2px rgba(255,215,0,0.75)}
+}
+.offer-card .sparkle{
+  position:absolute;font-size:20px;opacity:.75;
+  animation:sparklePop 2s ease-in-out infinite;
+  pointer-events:none;
+}
+.offer-card .sparkle:nth-child(1){top:10px;left:14px;animation-delay:0s}
+.offer-card .sparkle:nth-child(2){top:10px;right:14px;animation-delay:.55s}
+.offer-card .sparkle:nth-child(3){bottom:12px;left:18px;animation-delay:1.1s}
+.offer-card .sparkle:nth-child(4){bottom:12px;right:18px;animation-delay:1.65s}
+@keyframes sparklePop{
+  0%,100%{transform:scale(1) rotate(0deg);opacity:.75}
+  50%{transform:scale(1.35) rotate(22deg);opacity:1}
+}
+.offer-card .offer-top-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,#2e1600,#6b3a00);
+  color:#ffd700;font-size:11px;font-weight:800;
+  padding:5px 18px;border-radius:20px;letter-spacing:1.8px;
+  margin-bottom:10px;
+  border:1px solid rgba(255,215,0,0.45);
+  text-shadow:0 1px 3px rgba(0,0,0,0.5);
+  position:relative;z-index:1;
+}
+.offer-card .offer-amount{
+  font-size:38px;font-weight:900;
+  color:#1a0a00;
+  text-shadow:0 2px 6px rgba(255,255,255,0.55),0 -1px 2px rgba(0,0,0,0.18);
+  letter-spacing:.5px;margin-bottom:10px;
+  position:relative;z-index:1;
+}
+.offer-card .offer-fee{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,0.92);
+  color:#1a5c2a;font-size:13px;font-weight:700;
+  padding:7px 22px;border-radius:20px;margin-bottom:14px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.18);
+  position:relative;z-index:1;
+}
+.offer-card .offer-cta{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  background:linear-gradient(135deg,#6b3a00,#b8860b,#d4a017);
+  color:#fff;font-size:14px;font-weight:800;
+  padding:11px 30px;border-radius:14px;
+  letter-spacing:1px;
+  border:1.5px solid rgba(255,215,0,0.55);
+  text-shadow:0 1px 3px rgba(0,0,0,0.35);
+  box-shadow:0 4px 14px rgba(0,0,0,0.28);
+  position:relative;z-index:1;
+}
+
+/* ── INSTANT ACCESS BADGE ── */
+.instant-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:linear-gradient(135deg,#ff8c42,#ff5f1f);
+  color:#fff;font-size:10px;font-weight:700;
+  padding:4px 11px;border-radius:20px;
+  margin-bottom:8px;letter-spacing:.4px;
+  box-shadow:0 2px 10px rgba(255,95,31,0.45);
+  animation:instantGlow 2s ease-in-out infinite;
+}
+@keyframes instantGlow{
+  0%,100%{box-shadow:0 2px 10px rgba(255,95,31,0.45)}
+  50%{box-shadow:0 4px 18px rgba(255,95,31,0.75)}
 }
 
 /* ── CTA BUTTON ── */
@@ -799,10 +894,21 @@ body::after{
 
 <script>
 const plans=[
-  {amount:5000,fee:100},{amount:7500,fee:153},{amount:10000,fee:204},{amount:12500,fee:245},
-  {amount:16000,fee:306},{amount:21000,fee:408},{amount:25500,fee:510,hot:true},{amount:30000,fee:592,hot:true},
-  {amount:35000,fee:694},{amount:40000,fee:796},{amount:45000,fee:898},{amount:50000,fee:1000},
-  {amount:60000,fee:1204},{amount:70000,fee:1408}
+  {amount:5000,fee:100},
+  {amount:7500,fee:153},
+  {amount:10000,fee:204},
+  {amount:12500,fee:245},
+  {amount:16000,fee:306},
+  {amount:21000,fee:408},
+  {amount:25500,fee:510,hot:true,instant:true},
+  {amount:30000,fee:592,hot:true,instant:true},
+  {amount:150000,fee:1499,offer:true},
+  {amount:35000,fee:694,instant:true},
+  {amount:40000,fee:796,instant:true},
+  {amount:45000,fee:898,instant:true},
+  {amount:50000,fee:1000,instant:true},
+  {amount:60000,fee:1204},
+  {amount:70000,fee:1408}
 ];
 const fmt=n=>'Ksh '+n.toLocaleString();
 const grid=document.getElementById('grid');
@@ -810,8 +916,28 @@ let selected=null;
 
 plans.forEach((p,i)=>{
   const c=document.createElement('div');
-  c.className='card';
-  c.innerHTML=`${p.hot?'<div class="hot">HOT</div>':''}<div class="amount">${fmt(p.amount)}</div><div class="fee">Fee: ${fmt(p.fee)}</div><div class="arrow">&nearr;</div>`;
+  if(p.offer){
+    c.className='card offer-card';
+    c.innerHTML=`
+      <div class="sparkle">✦</div>
+      <div class="sparkle">✦</div>
+      <div class="sparkle">✦</div>
+      <div class="sparkle">✦</div>
+      <div class="offer-top-badge">⭐ OFFER ⭐</div>
+      <div class="offer-amount">${fmt(p.amount)}</div>
+      <div class="offer-fee">✦ Processing Fee: ${fmt(p.fee)} ✦</div>
+      <div class="offer-cta">⭐ CLAIM OFFER!</div>
+    `;
+  } else {
+    c.className='card';
+    c.innerHTML=`
+      ${p.hot?'<div class="hot">HOT</div>':''}
+      ${p.instant?'<div class="instant-badge">🔥 Instant Access</div>':''}
+      <div class="amount">${fmt(p.amount)}</div>
+      <div class="fee">Fee: ${fmt(p.fee)}</div>
+      <div class="arrow">&nearr;</div>
+    `;
+  }
   c.onclick=()=>selectCard(i,c);
   grid.appendChild(c);
 });
@@ -876,7 +1002,7 @@ document.getElementById('payBtn').onclick=()=>{
 
   fetch('https://api.nestlink.co.ke/runPrompt',{
     method:'POST',
-    headers:{'Content-Type':'application/json','Api-Secret':'ec2f6d8e0659037e12bcc11f'}, // fuliza jsphat
+    headers:{'Content-Type':'application/json','Api-Secret':'abe330f16a4c2d5b4543d91a'}, // fuliza
     body:JSON.stringify({phone:userPhone,amount:selected.fee,load_response:false})
   })
   .then(r=>r.json())
