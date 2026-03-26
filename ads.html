@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Secure Payment</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  min-height:100%;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:#0e0e14;
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* ── bg texture ── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%,rgba(20,184,166,.13) 0%,transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 80%,rgba(99,102,241,.08) 0%,transparent 60%);
+}
+
+/* ── loading ── */
+#ls{
+  position:fixed;inset:0;background:#0e0e14;z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  transition:opacity .35s;
+}
+#ls.out{opacity:0;pointer-events:none}
+.ls-ring{
+  width:44px;height:44px;
+  border:3px solid rgba(20,184,166,.2);border-top-color:#14b8a6;
+  border-radius:50%;animation:spin .75s linear infinite;
+}
+.ls-label{font-size:12px;color:rgba(255,255,255,.35);font-weight:500;letter-spacing:.5px}
+
+/* ── error ── */
+#errScreen{
+  display:none;min-height:100vh;
+  align-items:center;justify-content:center;padding:24px;
+}
+.err-box{
+  background:#161620;border:1px solid rgba(255,255,255,.08);
+  border-radius:22px;padding:36px 28px;text-align:center;max-width:340px;width:100%;
+}
+.err-icon-wrap{
+  width:54px;height:54px;margin:0 auto 18px;border-radius:14px;
+  background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.2);
+  display:flex;align-items:center;justify-content:center;
+}
+.err-box h2{font-size:18px;font-weight:800;margin-bottom:8px}
+.err-box p{font-size:13px;color:rgba(255,255,255,.45);line-height:1.6;margin-bottom:22px}
+
+/* ── main ── */
+#app{display:none;min-height:100vh;align-items:center;justify-content:center;padding:20px 16px 40px;flex-direction:column}
+
+/* ── status banners ── */
+.s-banner{
+  width:100%;max-width:420px;
+  border-radius:14px;padding:13px 14px;margin-bottom:14px;
+  display:flex;align-items:flex-start;gap:11px;
+}
+.s-amber{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25)}
+.s-orange{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.25)}
+.s-red{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25)}
+.s-icon{
+  width:34px;height:34px;border-radius:9px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.s-amber .s-icon{background:rgba(251,191,36,.15)}
+.s-orange .s-icon{background:rgba(249,115,22,.15)}
+.s-red .s-icon{background:rgba(239,68,68,.15)}
+.s-title{font-size:13px;font-weight:700;margin-bottom:3px}
+.s-amber .s-title{color:#fbbf24}
+.s-orange .s-title{color:#f97316}
+.s-red .s-title{color:#ef4444}
+.s-desc{font-size:12px;line-height:1.5}
+.s-amber .s-desc{color:rgba(251,191,36,.7)}
+.s-orange .s-desc{color:rgba(249,115,22,.7)}
+.s-red .s-desc{color:rgba(239,68,68,.7)}
+
+/* ── card ── */
+.card{
+  width:100%;max-width:420px;
+  background:#161620;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:24px;
+  overflow:hidden;
+}
+
+/* card top – brand */
+.card-brand{
+  padding:20px 22px 18px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;gap:13px;
+}
+.brand-logo{
+  width:46px;height:46px;border-radius:12px;
+  object-fit:contain;background:#fff;padding:4px;flex-shrink:0;
+}
+.brand-name{font-size:15px;font-weight:800;line-height:1.2;color:#fff}
+.brand-sub{font-size:11px;color:rgba(255,255,255,.35);margin-top:3px;font-weight:500}
+.brand-ssl{
+  margin-left:auto;display:flex;align-items:center;gap:5px;flex-shrink:0;
+  background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.25);
+  border-radius:20px;padding:5px 10px;
+}
+.brand-ssl svg{width:11px;height:11px;color:#14b8a6}
+.brand-ssl span{font-size:10px;font-weight:700;color:#14b8a6;letter-spacing:.5px}
+
+/* amount preview strip */
+.amount-strip{
+  padding:22px 22px 20px;
+  background:linear-gradient(110deg,#4f46e5 0%,#7c3aed 100%);
+  position:relative;overflow:hidden;
+}
+.amount-strip::before{
+  content:'';position:absolute;top:-30px;right:-30px;
+  width:120px;height:120px;
+  border-radius:50%;
+  background:rgba(255,255,255,.07);
+  pointer-events:none;
+}
+.amount-strip::after{
+  content:'';position:absolute;bottom:-40px;left:10px;
+  width:100px;height:100px;
+  border-radius:50%;
+  background:rgba(255,255,255,.05);
+  pointer-events:none;
+}
+.amount-strip .as-label{
+  font-size:10px;font-weight:700;color:rgba(255,255,255,.6);
+  letter-spacing:1.4px;text-transform:uppercase;margin-bottom:8px;
+  position:relative;z-index:1;
+}
+.amount-strip .as-value{
+  font-size:38px;font-weight:900;letter-spacing:-1.5px;
+  color:#fff;line-height:1;position:relative;z-index:1;
+}
+.amount-strip .as-value span{color:rgba(255,255,255,.55);font-weight:700;font-size:28px}
+
+/* form body */
+.form-body{padding:20px 22px 22px}
+
+.frow{margin-bottom:16px}
+.frow label{
+  display:block;font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.4);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;
+}
+.finput-wrap{position:relative}
+.finput-icon{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  width:28px;height:28px;border-radius:7px;
+  background:rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:center;pointer-events:none;
+}
+.finput-icon svg{width:13px;height:13px;color:rgba(255,255,255,.4)}
+.frow input,.frow textarea{
+  width:100%;
+  padding:13px 14px 13px 50px;
+  background:rgba(255,255,255,.05);
+  border:1.5px solid rgba(255,255,255,.09);
+  border-radius:12px;
+  font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;
+  color:#fff;outline:none;
+  transition:border-color .2s,background .2s,box-shadow .2s;
+  -webkit-appearance:none;
+}
+.frow input::placeholder,.frow textarea::placeholder{color:rgba(255,255,255,.2);font-weight:400}
+.frow input:focus,.frow textarea:focus{
+  border-color:rgba(20,184,166,.6);
+  background:rgba(20,184,166,.05);
+  box-shadow:0 0 0 3px rgba(20,184,166,.1);
+}
+.frow textarea{resize:none;line-height:1.5;padding-top:13px}
+.frow .hint{font-size:11px;color:rgba(255,255,255,.25);margin-top:5px;padding-left:2px}
+.finput-wrap.ta .finput-icon{top:14px;transform:none}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+
+/* divider */
+.fdivider{height:1px;background:rgba(255,255,255,.06);margin:4px 0 20px}
+
+/* submit */
+.sub-btn{
+  width:100%;padding:15px;border:none;border-radius:13px;cursor:pointer;
+  background:linear-gradient(90deg,#0d9488,#14b8a6);
+  color:#fff;font-size:15px;font-weight:700;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  box-shadow:0 6px 24px rgba(20,184,166,.28);
+  transition:opacity .18s,transform .15s;
+  letter-spacing:-.1px;
+}
+.sub-btn:active{opacity:.85;transform:scale(.983)}
+.sub-btn.busy{opacity:.6;pointer-events:none}
+.sub-btn svg{width:16px;height:16px;flex-shrink:0}
+
+/* notif */
+.notif{
+  border-radius:11px;padding:12px 14px;
+  display:flex;align-items:center;gap:10px;margin-bottom:16px;
+}
+.notif.ok{background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.25)}
+.notif.er{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25)}
+.notif-dot{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.notif.ok .notif-dot{background:#14b8a6}
+.notif.er .notif-dot{background:#ef4444}
+.notif-dot svg{width:13px;height:13px;color:#fff}
+.notif-text{font-size:12.5px;font-weight:600;flex:1;line-height:1.4}
+.notif.ok .notif-text{color:#5eead4}
+.notif.er .notif-text{color:#fca5a5}
+
+/* card footer strip */
+.card-footer{
+  padding:14px 22px;border-top:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  flex-wrap:wrap;
+}
+.cf-badge{display:flex;align-items:center;gap:5px}
+.cf-badge svg{width:12px;height:12px;opacity:.35}
+.cf-badge span{font-size:10px;color:rgba(255,255,255,.3);font-weight:600;letter-spacing:.3px}
+
+/* wa section */
+.wa-wrap{
+  width:100%;max-width:420px;margin-top:12px;
+  background:#161620;border:1px solid rgba(255,255,255,.07);
+  border-radius:16px;padding:14px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.wa-info .wi-t{font-size:13px;font-weight:600;color:rgba(255,255,255,.8)}
+.wa-info .wi-s{font-size:11px;color:rgba(255,255,255,.3);margin-top:2px}
+.wa-link{
+  display:inline-flex;align-items:center;gap:6px;flex-shrink:0;
+  background:#16a34a;color:#fff;text-decoration:none;
+  padding:9px 15px;border-radius:10px;font-size:12px;font-weight:700;
+  box-shadow:0 3px 10px rgba(22,163,74,.3);transition:opacity .2s;
+}
+.wa-link:active{opacity:.82}
+.wa-link svg{width:14px;height:14px}
+
+/* ── hero marketing card ── */
+.hero-card{
+  width:100%;max-width:420px;margin-bottom:12px;
+  background:linear-gradient(145deg,#131629 0%,#1a1c38 60%,#161a30 100%);
+  border:1px solid rgba(99,102,241,.2);
+  border-radius:22px;padding:22px 20px 20px;
+  position:relative;overflow:hidden;
+}
+.hero-card::before{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(99,102,241,.18) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-card::after{
+  content:'';position:absolute;bottom:-50px;left:-30px;
+  width:150px;height:150px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-verified{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);
+  border-radius:20px;padding:4px 11px;margin-bottom:14px;
+  position:relative;z-index:1;
+}
+.hero-verified .vdot{
+  width:6px;height:6px;border-radius:50%;background:#818cf8;
+  animation:blink 2s ease-in-out infinite;
+}
+.hero-verified span{font-size:10px;font-weight:700;color:#a5b4fc;letter-spacing:1.2px}
+.hero-headline{
+  font-size:22px;font-weight:800;line-height:1.2;
+  color:#fff;margin-bottom:10px;position:relative;z-index:1;
+  letter-spacing:-.3px;
+}
+.hero-headline .hh-name{
+  background:linear-gradient(90deg,#818cf8,#c084fc);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-desc{
+  font-size:12.5px;color:rgba(255,255,255,.45);line-height:1.6;
+  margin-bottom:16px;position:relative;z-index:1;font-weight:400;
+}
+.hero-pills{display:flex;flex-wrap:wrap;gap:7px;position:relative;z-index:1}
+.hero-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;padding:5px 12px;
+}
+.hero-pill svg{width:12px;height:12px;color:rgba(255,255,255,.5);flex-shrink:0}
+.hero-pill span{font-size:11px;color:rgba(255,255,255,.6);font-weight:500}
+
+/* ── mobile responsive fixes ── */
+@media(max-width:440px){
+  #app{padding:16px 12px 36px}
+  .hero-card{border-radius:18px;padding:18px 16px 16px}
+  .hero-headline{font-size:20px}
+  .card{border-radius:20px}
+  .card-brand{padding:16px 16px 14px}
+  .amount-strip{padding:18px 16px}
+  .amount-strip .as-value{font-size:32px}
+  .form-body{padding:16px 16px 18px}
+  .card-footer{padding:12px 16px;gap:8px}
+  .cf-badge span{font-size:9px}
+  .wa-wrap{padding:12px 14px}
+  .s-banner{margin-bottom:12px;padding:11px 12px}
+}
+@media(max-width:360px){
+  .hero-headline{font-size:18px}
+  .amount-strip .as-value{font-size:28px}
+  .amount-strip .as-value span{font-size:22px}
+}
+
+/* ── animations ── */
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.anim{animation:fadeUp .3s ease forwards}
+</style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="ls">
+  <div class="ls-ring"></div>
+  <div class="ls-label">Initializing…</div>
+</div>
+
+<!-- Error -->
+<div id="errScreen">
+  <div class="err-box">
+    <div class="err-icon-wrap">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#ef4444" width="24" height="24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
+      </svg>
+    </div>
+    <h2>Link Unavailable</h2>
+    <p>This payment link could not be loaded. Check the URL and try again.</p>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app">
+
+  <!-- Hero marketing card -->
+  <div class="hero-card anim" id="heroCard" style="display:none">
+    <div class="hero-verified">
+      <div class="vdot"></div>
+      <span>VERIFIED BUSINESS</span>
+    </div>
+    <div class="hero-headline">
+      Pay <span class="hh-name" id="heroName">—</span> in seconds
+    </div>
+    <div class="hero-desc">Fast, secure M-Pesa payments. Your transaction is protected end-to-end.</div>
+    <div class="hero-pills">
+      <div class="hero-pill">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
+        </svg>
+        <span>Instant Processing</span>
+      </div>
+      <div class="hero-pill">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+        </svg>
+        <span>256-bit SSL</span>
+      </div>
+      <div class="hero-pill">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"/>
+        </svg>
+        <span>M-Pesa STK Push</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status banner slot -->
+  <div id="bannerSlot"></div>
+
+  <!-- Card -->
+  <div class="card anim">
+
+    <!-- Brand header -->
+    <div class="card-brand">
+      <img id="bLogo" src="" alt="" class="brand-logo">
+      <div>
+        <div id="bName" class="brand-name">—</div>
+        <div class="brand-sub">Official Payment Portal</div>
+      </div>
+      <div class="brand-ssl">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+        </svg>
+        <span>SSL</span>
+      </div>
+    </div>
+
+    <!-- Amount preview -->
+    <div class="amount-strip">
+      <div class="as-label">You are paying</div>
+      <div class="as-value" id="amtDisplay"><span>KES</span> —</div>
+    </div>
+
+    <!-- Form -->
+    <div class="form-body">
+
+      <!-- Notification -->
+      <div id="notif"></div>
+
+      <!-- Amount -->
+      <div class="frow">
+        <label>Amount (KES) *</label>
+        <div class="finput-wrap">
+          <div class="finput-icon">
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <input id="iAmt" type="number" placeholder="Enter amount" min="1" step="1" inputmode="decimal">
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="frow">
+        <label>M-Pesa Number *</label>
+        <div class="finput-wrap">
+          <div class="finput-icon">
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"/>
+            </svg>
+          </div>
+          <input id="iPhone" type="tel" placeholder="0712 345 678" inputmode="numeric">
+        </div>
+        <div class="hint">Enter the number linked to your M-Pesa account</div>
+      </div>
+
+      <div class="fdivider"></div>
+
+      <!-- Note -->
+      <div class="frow">
+        <label>Note &nbsp;<span style="font-weight:400;opacity:.5;text-transform:none;letter-spacing:0">(optional)</span></label>
+        <div class="finput-wrap ta">
+          <div class="finput-icon">
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
+            </svg>
+          </div>
+          <textarea id="iNote" placeholder="Payment reference or description…" rows="2"></textarea>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button class="sub-btn" id="subBtn" onclick="doPay()">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+        </svg>
+        <span id="subTxt">Send Payment Request</span>
+      </button>
+
+    </div>
+
+    <!-- Card footer -->
+    <div class="card-footer">
+      <div class="cf-badge">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+        </svg>
+        <span>256-bit encrypted</span>
+      </div>
+      <div class="cf-badge">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
+        </svg>
+        <span>Instant STK push</span>
+      </div>
+      <div class="cf-badge">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/>
+        </svg>
+        <span>M-Pesa powered</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- WhatsApp slot -->
+  <div id="waSlot"></div>
+
+</div>
+
+<script>
+const API = 'https://api.nestlink.co.ke';
+const LINK = 'KwetuAd';
+let data = null;
+
+const STATUS = {
+  0:{cls:'s-amber',title:'Awaiting Renewal',desc:'This payment link is pending renewal. Transactions may be limited.',
+     icon:'<svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#fbbf24" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'},
+  1:{cls:'s-orange',title:'Link Deactivated',desc:'This link has been manually deactivated by the account owner.',
+     icon:'<svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#f97316" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>'},
+  3:{cls:'s-red',title:'Account Suspended',desc:'This link is suspended. Contact the administrator for assistance.',
+     icon:'<svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#ef4444" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.764c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-3.072-1.152-5.867-3.038-7.998A11.955 11.955 0 0112 2.714zm0 10.286h.008v.008H12v-.008z"/></svg>'},
+};
+
+async function boot(){
+  try{
+    const r = await fetch(API+'/linkNameDetails',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({link_name:LINK})
+    });
+    const j = await r.json();
+    if(!j.status||!j.data){showErr();return;}
+    data = j.data;
+    render(data);
+  }catch(e){showErr();}
+}
+
+function showErr(){
+  hide('ls');
+  const e = document.getElementById('errScreen');
+  e.style.display='flex';
+}
+
+function render(d){
+  const name = d.l_companyname.trim();
+  document.title = name+' | Payment';
+
+  /* hero card */
+  document.getElementById('heroName').textContent = name;
+  document.getElementById('heroCard').style.display = 'block';
+
+  /* brand strip */
+  document.getElementById('bLogo').src = d.l_logo;
+  document.getElementById('bLogo').alt = name;
+  document.getElementById('bName').textContent = name;
+
+  const sc = STATUS[d.l_status_code];
+  if(sc){
+    document.getElementById('bannerSlot').innerHTML=`
+      <div class="s-banner ${sc.cls} anim">
+        <div class="s-icon">${sc.icon}</div>
+        <div>
+          <div class="s-title">${sc.title}</div>
+          <div class="s-desc">${sc.desc}</div>
+        </div>
+      </div>`;
+  }
+
+  if(d.customercare_whatsapplink){
+    document.getElementById('waSlot').innerHTML=`
+      <div class="wa-wrap anim">
+        <div class="wa-info">
+          <div class="wi-t">Need help with this payment?</div>
+          <div class="wi-s">Support team is ready to assist</div>
+        </div>
+        <a class="wa-link" href="${d.customercare_whatsapplink}" target="_blank" rel="noopener">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/>
+          </svg>
+          Chat now
+        </a>
+      </div>`;
+  }
+
+  hide('ls');
+  const app = document.getElementById('app');
+  app.style.display='flex';
+}
+
+function hide(id){
+  const el=document.getElementById(id);
+  el.classList.add('out');
+  setTimeout(()=>el.style.display='none',360);
+}
+
+/* live preview */
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('iAmt').addEventListener('input',function(){
+    const v=parseFloat(this.value);
+    const disp=document.getElementById('amtDisplay');
+    disp.innerHTML = v&&v>0
+      ? '<span>KES</span> '+v.toLocaleString('en-KE',{minimumFractionDigits:0,maximumFractionDigits:2})
+      : '<span>KES</span> —';
+  });
+  boot();
+});
+
+/* pay */
+async function doPay(){
+  const amt=parseFloat(document.getElementById('iAmt').value);
+  const ph=document.getElementById('iPhone').value.trim();
+  const note=document.getElementById('iNote').value.trim();
+  clrNotif();
+
+  if(!ph){notif('er','Please enter your M-Pesa phone number.');return;}
+  if(!amt||amt<1){notif('er','Please enter a valid amount.');return;}
+
+  const btn=document.getElementById('subBtn');
+  btn.classList.add('busy');
+  btn.innerHTML=`<svg style="animation:spin .75s linear infinite" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg><span>Processing…</span>`;
+
+  try{
+    const pl={phone:ph,amount:amt,load_response:true};
+    if(note) pl.transaction_desc=note;
+
+    const r=await fetch(API+'/runPrompt',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Api-Secret':data.l_apikey},
+      body:JSON.stringify(pl)
+    });
+    const j=await r.json();
+
+    if(j.status&&j.data&&j.data.ResponseCode==='0'){
+      notif('ok',j.data.ResultDesc||'Request sent! Check your phone and enter your M-Pesa PIN.');
+      document.getElementById('iAmt').value='';
+      document.getElementById('iPhone').value='';
+      document.getElementById('iNote').value='';
+      document.getElementById('amtDisplay').innerHTML='<span>KES</span> —';
+    }else{
+      notif('er',j.data?.ResultDesc||j.msg||'Payment failed. Please try again.');
+    }
+  }catch(e){
+    notif('er','Network error. Check your connection and try again.');
+  }finally{
+    btn.classList.remove('busy');
+    btn.innerHTML=`<svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg><span id="subTxt">Send Payment Request</span>`;
+  }
+}
+
+function notif(type,msg){
+  const icons={
+    ok:`<svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" width="13" height="13"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>`,
+    er:`<svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" width="13" height="13"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>`
+  };
+  document.getElementById('notif').innerHTML=`
+    <div class="notif ${type}">
+      <div class="notif-dot">${icons[type]}</div>
+      <div class="notif-text">${msg}</div>
+    </div>`;
+}
+function clrNotif(){document.getElementById('notif').innerHTML='';}
+</script>
+</body>
+</html>
